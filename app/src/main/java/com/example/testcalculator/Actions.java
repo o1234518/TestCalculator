@@ -1,6 +1,6 @@
 package com.example.testcalculator;
 
-public enum Operator {
+public enum Actions {
     ADD,
     MINUS,
     MULTIPLICATION,

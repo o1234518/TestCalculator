@@ -2,65 +2,140 @@ package com.example.testcalculator;
 
 import android.util.Log;
 
-import static com.example.testcalculator.Operator.*;
-
 public class Calculator {
     //輸入的整數部分
     private String intNumber;
     //輸入的小數部分
     private String decNumber;
-    private Number totalNumber;
-    private Number secondNum;
+    private Double totalNumber;
+    private Double secondNum;
     //是否為正數
     private Boolean isPositive = true;
-    //運算子 +_0 , -_1 , *_2 , /_3 , =_4 , ._5
-    private int calOperator = -1;
+    //運算子 +_0 , -_1 , *_2 , /_3
+    private int calOperator = 0;
+    //動作 +_0 , -_1 , *_2 , /_3 , =_4 , ._5
+    private int action = -1;
     private Boolean isDec;
-    private Boolean isClickEqual = false;
+    private Boolean isExponential = false;
+    private Boolean isNan = false;
+    private Boolean isKeyInNumber = false;
 
 
     public void init() {
-        intNumber = "";
+        intNumber = "0";
         decNumber = "";
-        totalNumber = 0;
-        secondNum = 0;
+        totalNumber = 0.0;
+        secondNum = 0.0;
         isPositive = true;
-        calOperator = -1;
+        calOperator = 0;
+        action = -1;
+        isDec = false;
+        isExponential = false;
+        isNan = false;
+    }
+
+    private void initCal() {
+        intNumber = "0";
+        decNumber = "";
+        isPositive = true;
         isDec = false;
     }
 
-    private void initCal(){
-        intNumber = "";
-        decNumber = "";
-        secondNum = 0;
-        isPositive = true;
-        isDec = false;
-    }
 
-
-    public Number keyNumber(String keyNum) {
-        if (!isDec) {
-            intNumber += keyNum;
-            return Integer.parseInt(intNumber);
-        } else {
-            decNumber += keyNum;
-            return Double.parseDouble(intNumber + "." + decNumber);
+    public String keyNumber(String keyNum) {
+        if (action == Actions.EQUAL.ordinal()) {
+            init();
+        }
+        if (secondNum != 0.0)
+            secondNum = 0.0;
+        try {
+            if (!isExponential && !isNan) {
+                if ((intNumber.length() + decNumber.length()) < 15) {
+                    isKeyInNumber = true;
+                    if (!isDec) {
+                        if (intNumber.equals("0")) {
+                            if (!keyNum.equals("0")) {
+                                intNumber = keyNum;
+                            }
+                        } else {
+                            intNumber += keyNum;
+                        }
+                        return intNumber;
+                    } else {
+                        decNumber += keyNum;
+                        return intNumber + "." + decNumber;
+                    }
+                } else {
+                    if (decNumber.equals("")) {
+                        return intNumber;
+                    } else {
+                        return intNumber + "." + decNumber;
+                    }
+                }
+            } else {
+                if (isNan) {
+                    return "錯誤!!";
+                } else {
+                    return totalNumber.toString();
+                }
+            }
+        } catch (Exception e) {
+            Log.e("keyNumberError", e.getLocalizedMessage());
+            return "";
         }
     }
 
-    public void clickOperator(Operator operator) {
-        switch (operator) {
+    public String numberBack() {
+        if (intNumber.length() == 0 || decNumber.length() == 0) {
+            return totalNumber.toString();
+        } else {
+            if (!isDec) {
+                if (!intNumber.equals("0")) {
+                    if (intNumber.length() == 1) {
+                        intNumber = "0";
+                    } else {
+                        intNumber = intNumber.substring(0, intNumber.length()-1);
+                    }
+                }
+                return intNumber;
+            } else {
+                if (decNumber.length() > 0) {
+                    decNumber = decNumber.substring(0, decNumber.length()-1);
+                } else {
+                    isDec = false;
+                    if (!intNumber.equals("0")) {
+                        if (intNumber.length() == 1) {
+                            intNumber = "0";
+                        } else {
+                            intNumber = intNumber.substring(0, intNumber.length()-1);
+                        }
+                    }
+                }
+                if (decNumber.length() > 0) {
+                    return intNumber + "." + decNumber;
+                } else {
+                    return intNumber;
+                }
+            }
+        }
+    }
+
+    public void clickOperator(Actions actions) {
+        switch (actions) {
             case ADD:
             case MINUS:
             case MULTIPLICATION:
             case DIVISION:
-                calOperator = operator.ordinal();
-                Log.e("operator num", calOperator + "");
+                action = actions.ordinal();
                 checkNum();
+                calOperator = action;
                 break;
             case EQUAL:
-                Log.e("Click Equal", "");
                 checkNum();
+                if (action == Actions.EQUAL.ordinal()) {
+                    calculate();
+                }
+                action = actions.ordinal();
                 break;
             case POINT:
                 isDec = true;
@@ -69,38 +144,75 @@ public class Calculator {
     }
 
     private void checkNum() {
-        if (!intNumber.equals("")
-                && decNumber.equals("")) {
-            secondNum = Integer.parseInt(intNumber);
-            Log.e("checkNum_1", secondNum + "");
-        } else if (!intNumber.equals("")
-                || !decNumber.equals("")) {
-            secondNum = Double.parseDouble("0." + decNumber);
-            Log.e("checkNum_2", secondNum + "");
+        if ((!intNumber.equals("0") || !decNumber.equals("")) || isKeyInNumber) {
+            secondNum = Double.parseDouble(intNumber + "." + decNumber);
+            if (!isPositive) {
+                secondNum = secondNum * (-1);
+            }
+            initCal();
+            calculate();
         }
-        calculate();
     }
 
     private void calculate() {
-        switch (calOperator) {
-            case 0:
-                totalNumber = (Double)totalNumber + (Double)secondNum ;
-                break;
-            case 1:
-                totalNumber = (Double)totalNumber - (Double)secondNum ;
-                break;
-            case 2:
-                totalNumber = (Double)totalNumber * (Double)secondNum ;
-                break;
-            case 3:
-                totalNumber = (Double)totalNumber / (Double)secondNum ;
-                break;
+        Log.e("doCalculate", calOperator + ", " + totalNumber + " , " + secondNum);
+        if (!isExponential && !isNan) {
+            if (totalNumber == 0.0 && calOperator == 0) {
+                totalNumber = secondNum;
+            } else {
+                switch (calOperator) {
+                    case 0:
+                        totalNumber = totalNumber + secondNum;
+                        break;
+                    case 1:
+                        totalNumber = totalNumber - secondNum;
+                        break;
+                    case 2:
+                        totalNumber = totalNumber * secondNum;
+                        break;
+                    case 3:
+                        if (secondNum != 0) {
+                            totalNumber = totalNumber / secondNum;
+                        } else {
+                            isNan = true;
+                        }
+                        break;
+                }
+            }
+            Log.e("cal", totalNumber + "");
         }
-        initCal();
+        String text = totalNumber.toString();
+        if (text.indexOf("E") > 0) {
+            int idx = text.lastIndexOf("E");
+            int check = Integer.parseInt(text.substring(idx + 1));
+            if (check > 30) {
+                isExponential = true;
+            }
+        }
+        isKeyInNumber = false;
     }
 
-    public Boolean getIsDec() {
-        return isDec;
+    public void setIsDec() {
+        isDec = true;
     }
 
+    public Boolean getSign() {
+        return isPositive;
+    }
+
+    public void setSign(Boolean sign) {
+        isPositive = sign;
+    }
+
+    public Double getTotalNumber() {
+        return totalNumber;
+    }
+
+    public Boolean getIsError() {
+        return isExponential || isNan;
+    }
+
+    public Boolean getIsNan() {
+        return isNan;
+    }
 }
