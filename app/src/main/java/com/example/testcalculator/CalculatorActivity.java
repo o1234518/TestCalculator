@@ -236,11 +236,48 @@ public class CalculatorActivity extends AppCompatActivity {
                 num = num * -1;
             }
             if (isDouble(num)) {
-                tv_mointor.setText(num.toString());
+                tv_mointor.setText(addCommonForDouble(num.toString()));
             } else {
                 String text = num.toString();
-                tv_mointor.setText(text.substring(0, text.length()-2));
+                tv_mointor.setText(addCommon(text.substring(0, text.length()-2)));
             }
+        }
+    }
+
+    private String addCommon(String num) {
+        String commonNum = "";
+        int count = 0;
+        if (num.indexOf("E") > 0) {
+            return num;
+        } else {
+            for (int i = num.length(); i > 0; i--) {
+                if (count == 3) {
+                    commonNum = "," + commonNum;
+                    count = 0;
+                }
+                commonNum = num.substring(i - 1, i) + commonNum;
+                count++;
+            }
+            return commonNum;
+        }
+    }
+
+    private String addCommonForDouble(String num) {
+        String commonNum = "";
+        String dec = num.substring(num.lastIndexOf("."));
+        int count = 0;
+        if (num.indexOf("E") > 0) {
+            return num;
+        } else {
+            for (int i = num.lastIndexOf("."); i > 0; i--) {
+                if (count == 3) {
+                    commonNum = "," + commonNum;
+                    count = 0;
+                }
+                commonNum = num.substring(i - 1, i) + commonNum;
+                count++;
+            }
+            return commonNum + dec;
         }
     }
 }
