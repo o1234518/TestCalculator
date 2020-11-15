@@ -22,18 +22,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         init();
-
-        layout_name.setErrorEnabled(true);
-        btn_nameConfirm.setOnClickListener(clickListner);
     }
 
     private void init() {
         layout_name = findViewById(R.id.layout_name);
+        layout_name.setErrorEnabled(true);
         edit_name = findViewById(R.id.edit_name);
         btn_nameConfirm = findViewById(R.id.btn_name_confirm);
+        btn_nameConfirm.setOnClickListener(clickListener);
     }
 
-    private Button.OnClickListener clickListner = new Button.OnClickListener(){
+    private Button.OnClickListener clickListener = new Button.OnClickListener(){
         @Override
         public void onClick(View view) {
             switch (view.getId()) {

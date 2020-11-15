@@ -14,13 +14,13 @@
         app:layout_constraintGuide_percent="0.3" />
 
     <TextView
-        android:id="@+id/tv_calculator_mointer"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_calculator_mointor"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:textAlignment="viewEnd"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -50,7 +50,7 @@
         android:layout_marginTop="10dp"
         android:text="+/-"
         android:textSize="24dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btn_cal_1"
         app:layout_constraintTop_toBottomOf="@+id/btn_cal_1" />
 
     <Button
@@ -87,6 +87,8 @@
         android:id="@+id/btn_cal_ac"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="10dp"
         android:text="AC"
         android:textSize="24dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +103,7 @@
         android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/btn_cal_ac"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/btn_cal_ac" />
 
     <Button
         android:id="@+id/btn_cal_none"
@@ -129,7 +131,7 @@
         android:layout_marginTop="10dp"
         android:text="7"
         android:textSize="24dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btn_cal_ac"
         app:layout_constraintTop_toBottomOf="@+id/btn_cal_ac" />
 
     <Button
@@ -169,7 +171,7 @@
         android:layout_marginTop="10dp"
         android:text="4"
         android:textSize="24dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btn_cal_7"
         app:layout_constraintTop_toBottomOf="@+id/btn_cal_7" />
 
     <Button
@@ -199,7 +201,7 @@
         android:layout_marginTop="10dp"
         android:text="1"
         android:textSize="24dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btn_cal_4"
         app:layout_constraintTop_toBottomOf="@+id/btn_cal_4" />
 
     <Button
@@ -221,4 +223,87 @@
         android:textSize="24dp"
         app:layout_constraintStart_toEndOf="@+id/btn_cal_2"
         app:layout_constraintTop_toTopOf="@+id/btn_cal_2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.07" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.93" />
+
+    <TextView
+        android:id="@+id/tv_sign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.869"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_minus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_multiplication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="×"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_division"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="÷"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
